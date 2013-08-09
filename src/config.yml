@@ -1,0 +1,23 @@
+## Chat messages (color codes supported) http://www.minecraftwiki.net/wiki/Formatting_codes
+## Supported placeholders:
+##  - <balance> (puts the balance of the player. e.g: $0.0)
+##  - <payment> (puts the amount of money that has to be paid)
+##  - <receiver> (person that gets paid)
+info:
+  balanceInfo: Your current balance is <balance>.
+payments:
+  notEnoughMoney: Cannot complete the transaction. You need <payment> but only have <balance>.
+  successful: You have paid an amount of <payment> to <receiver>.
+
+## other configurations
+other:
+  colors:
+    console: true
+    chat: true
+  transactions:
+    save: true
+    
+    ## if this is false, only OPs will be ale to view transaction logs
+    viewableByUser: true
+  checkUpdates: true
+  
