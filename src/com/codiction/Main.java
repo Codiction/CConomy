@@ -5,6 +5,7 @@
  */
 package com.codiction;
 
+import com.codiction.economy.Account;
 import com.codiction.economy.Economy;
 import com.codiction.utils.FileManager;
 import org.bukkit.Bukkit;
@@ -34,42 +35,46 @@ public class Main extends JavaPlugin {
     }
 
     private void init() {
-        economy = new Economy();
         fileManager = new FileManager();
+        economy = new Economy();
+        
+        economy.createAccount("Aristocracy101");
+        economy.setBalance(economy.getAccount("Aristocracy101"),2.25);
+        economy.getAccount("Aristocracy101").listTransactions();
     }
 
     public void info(String msg) {
         if (consoleColorSupport) {
-            System.out.println(ChatColor.LIGHT_PURPLE + "<CConomy>" + ChatColor.GREEN + msg + ChatColor.RESET);
+            getServer().getConsoleSender().sendMessage(ChatColor.LIGHT_PURPLE + "<CConomy> INFO: " + ChatColor.GREEN + msg + ChatColor.RESET);
         } else {
-            System.out.println("<CConomy>" + msg);
+            getServer().getConsoleSender().sendMessage("<CConomy> INFO: " + msg);
         }
 
     }
 
     public void error(String msg) {
         if (consoleColorSupport) {
-            System.out.println(ChatColor.LIGHT_PURPLE + "<CConomy>" + ChatColor.RED + msg + ChatColor.RESET);
+            getServer().getConsoleSender().sendMessage(ChatColor.LIGHT_PURPLE + "<CConomy> ERROR: " + ChatColor.RED + msg + ChatColor.RESET);
         } else {
-            System.out.println("<CConomy>" + msg);
+            getServer().getConsoleSender().sendMessage("<CConomy> ERROR: " + msg);
         }
 
     }
 
     public void warn(String msg) {
         if (consoleColorSupport) {
-            System.out.println(ChatColor.LIGHT_PURPLE + "<CConomy>" + ChatColor.GOLD + msg + ChatColor.RESET);
+            getServer().getConsoleSender().sendMessage(ChatColor.LIGHT_PURPLE + "<CConomy> WARNING: " + ChatColor.GOLD + msg + ChatColor.RESET);
         } else {
-            System.out.println("<CConomy>" + msg);
+            getServer().getConsoleSender().sendMessage("<CConomy> WARNING: " + msg);
         }
 
     }
 
     public void debug(String msg) {
         if (consoleColorSupport) {
-            System.out.println(ChatColor.LIGHT_PURPLE + "<CConomy>" + ChatColor.DARK_AQUA + msg + ChatColor.RESET);
+            getServer().getConsoleSender().sendMessage(ChatColor.LIGHT_PURPLE + "<CConomy> DEBUG: " + ChatColor.DARK_AQUA + msg + ChatColor.RESET);
         } else {
-            System.out.println("<CConomy>" + msg);
+            getServer().getConsoleSender().sendMessage("<CConomy> DEBUG: " + msg);
         }
 
     }

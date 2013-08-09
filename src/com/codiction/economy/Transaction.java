@@ -19,11 +19,11 @@ public class Transaction {
     public String time;
     
     public Transaction(String text) {
-        time = new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss").format(Calendar.getInstance().getTime());
+        time = new SimpleDateFormat("yyyy/MM/dd HH/mm/ss").format(Calendar.getInstance().getTime());
         this.text = text;
     }
     
     public String get() {
-        return "<" + time + "> - " + text;
+        return "<" + time + ">  " + text;
     }
 }

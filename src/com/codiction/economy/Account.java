@@ -29,7 +29,13 @@ public class Account {
     
     public Account(String owner) {
         this.owner = owner;
-        player = Bukkit.getPlayer(owner);
+
+    }
+    
+    public void listTransactions() {
+        for(Transaction t : transactionList) {
+            main.debug(t.get());
+        }
     }
     
     public void subtract(double amount) {

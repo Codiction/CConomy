@@ -7,13 +7,11 @@ package com.codiction.economy;
 
 import com.codiction.Main;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 /**
@@ -31,7 +29,9 @@ public class Economy {
 
     private void loadAccounts() {
         for (File file : main.fileManager.getAccountFiles()) {
-            loadAccount(file);
+            if (file != null) {
+                loadAccount(file);
+            }
         }
     }
 
@@ -50,6 +50,18 @@ public class Economy {
     public void setBalance(Player acc, double amount) {
         Account a = getAccount(acc);
         a.set(amount);
+        createOtherTransaction("Balance was set to " + amount, a);
+    }
+
+    public void setBalance(Account acc, double amount) {
+
+        acc.set(amount);
+        createOtherTransaction("Balance was set to " + amount, acc);
+    }
+
+    public void createOtherTransaction(String t, Account a) {
+        Transaction tr = new Transaction(t);
+        a.addTransaction(tr);
     }
 
     public void doRefund(Account asker, Account concerned, double amount) {
@@ -87,8 +99,18 @@ public class Economy {
         return null;
     }
 
+    public Account getAccount(String name) {
+        for (Account a : accounts) {
+            if (a.owner.equals(name)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
     public void createAccount(String name) {
         if (!accountExists(name)) {
+            main.info("New account created for " + name);
             Account a = new Account(name);
             accounts.add(a);
             createCreationTransaction(a);
@@ -106,25 +128,23 @@ public class Economy {
 
     private void loadAccount(File file) {
         try {
-            FileConfiguration conf = null;
-            conf.load(file);
+
+            FileConfiguration conf = YamlConfiguration.loadConfiguration(file);
+
             main.debug("Loading account: " + file.getName());
             Account a = new Account(conf.getString("owner"));
             a.set(conf.getDouble("balance"));
 
             File transactions = main.fileManager.getTransactionFile(a.owner);
-            FileConfiguration transconf = null;
-            transconf.load(transactions);
+            main.info(transactions.getPath());
+            FileConfiguration transconf = YamlConfiguration.loadConfiguration(transactions);
+
             a.transactionList = createTransactionList(transconf.getStringList("transactions"));
             accounts.add(a);
 
-        } catch (FileNotFoundException ex) {
-            main.error("Account file not found! Plugin misconfiguration? (" + file.getName() + ")");
-        } catch (InvalidConfigurationException ex) {
-            main.error("Could not create configuration instance of file " + file.getName());
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             main.error("Something went terribly wrong while accessing the filesystem.");
-            ex.printStackTrace();
+            main.error(ex.getMessage());
         }
     }
 

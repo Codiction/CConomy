@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  *
@@ -39,6 +40,7 @@ public class FileManager {
 
         if (!dataFolder.exists()) {
             main.info("Preparing for first use...");
+            main.saveDefaultConfig();
             dataFolder.mkdir();
         }
 
@@ -63,7 +65,8 @@ public class FileManager {
 
     public File getTransactionFile(String name) {
         for (File f : getTransactionFiles()) {
-            if (f.getName().equals(name)) {
+            main.debug("Comparing " + f.getName() + " to " + name + ".yml");
+            if (f.getName().equals(name + ".yml")) {
                 return f;
             }
         }
@@ -71,12 +74,12 @@ public class FileManager {
     }
 
     public void save(Account a) {
-        FileConfiguration fc = null;
+        FileConfiguration fc = YamlConfiguration.loadConfiguration(new File(accountFolder.getPath() + "\\" + a.owner + ".yml"));
         fc.set("owner", a.owner);
         fc.set("balance", a.getBalance());
         fc.set("transactionRef", a.owner);
 
-        FileConfiguration tr = null;
+        FileConfiguration tr = YamlConfiguration.loadConfiguration(new File(transactionFolder.getPath() + "\\" + a.owner + ".yml"));
         tr.set("owner", a.owner);
         tr.set("transactions", convertToStringList(a.transactionList));
 
